@@ -33,7 +33,7 @@ app.get("/auth", async (req, res) => {
   if (cookie?.includes("username")) {
     return res
       .status(200)
-      .json({ success: true, username: cookie.split("=")[1] });
+      .json({ success: true, username: decodeURI(cookie.split("=")[1]) });
   } else {
     return res.status(200).json({ success: false });
   }
