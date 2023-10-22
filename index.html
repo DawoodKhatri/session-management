@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Session Management</title>
+  </head>
+  <body class="vw-100 vh-100">
+    <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+      <div class="shadow p-5 bg-white rounded text-center m-4">
+        <div id="loggedin">
+          <h1 class="font-weight-bold text-success">Logged In</h1>
+          <h3 id="username" class="text-info"></h3>
+          <button class="btn btn-lg btn-danger mt-4" onclick="logout()">
+            Logout
+          </button>
+        </div>
+        <div id="loggedout">
+          <h1 class="font-weight-bold text-danger">Logged Out</h1>
+          <a href="/login">
+            <button class="btn btn-lg btn-success mt-4">Login</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <script>
+      const checkAuth = () => {
+        fetch("/auth").then((res) => {
+          res.json().then((response) => {
+            if (response.success) {
+              document.getElementById("loggedout").style.display = "none";
+              document.getElementById("loggedin").style.display = "block";
+              document.getElementById(
+                "username"
+              ).innerText = `Username: ${response.username}`;
+            } else {
+              document.getElementById("loggedin").style.display = "none";
+              document.getElementById("loggedout").style.display = "block";
+              document.getElementById("username").innerText = "";
+            }
+          });
+        });
+      };
+
+      const logout = () => {
+        fetch("/logout", { method: "POST" }).then(() => {
+          checkAuth();
+        });
+      };
+    </script>
+    <script>
+      document.getElementById("loggedin").style.display = "none";
+      document.getElementById("loggedout").style.display = "none";
+
+      checkAuth();
+    </script>
+  </body>
+</html>
